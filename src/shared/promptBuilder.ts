@@ -16,7 +16,7 @@ export const MODE_LABELS: Record<RewriteMode, string> = {
 };
 
 // Coerce null/undefined to '' without mutating the original.
-// Defensive runtime guard — TypeScript types are strict, but callers
+// Defensive runtime guard - TypeScript types are strict, but callers
 // from content scripts cross page boundaries where runtime types can diverge.
 function safe(value: string | null | undefined): string {
   if (value == null) return '';

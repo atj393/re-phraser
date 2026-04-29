@@ -11,10 +11,10 @@ export interface OpenOrFocusResult {
 // Open the user's configured AI chat URL in a reusable tab.
 //
 // Priority order:
-// 1. lastAiTabRef.value — the tab we opened last time, if it still exists.
+// 1. lastAiTabRef.value - the tab we opened last time, if it still exists.
 //    We reuse it even if the user navigated within the site (e.g. started a
 //    new conversation), so we never create duplicates.
-// 2. Exact URL search — any open tab whose URL matches exactly.
+// 2. Exact URL search - any open tab whose URL matches exactly.
 // 3. Create a new tab.
 //
 // lastAiTabRef is mutated to track the most-recently used tab ID.
@@ -34,7 +34,7 @@ export async function openOrFocusAiTab(
         return { ok: true, tabId: tab.id };
       }
     } catch {
-      // Tab was closed — clear the cached ID and fall through.
+      // Tab was closed - clear the cached ID and fall through.
       lastAiTabRef.value = undefined;
     }
   }
@@ -48,7 +48,7 @@ export async function openOrFocusAiTab(
     return { ok: true, tabId: match.id };
   }
 
-  // Nothing found — open a new tab. When activate is false the tab opens in
+  // Nothing found - open a new tab. When activate is false the tab opens in
   // the background so the user stays on the source page.
   const created = await chrome.tabs.create({ url, active: activate });
   if (created.id != null) lastAiTabRef.value = created.id;

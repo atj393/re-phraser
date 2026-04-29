@@ -1,5 +1,5 @@
 // Safe plain-text replacement for all supported editable element types.
-// Never injects user content as HTML — clipboard text is always treated as
+// Never injects user content as HTML - clipboard text is always treated as
 // plain text to prevent XSS via a crafted AI response.
 
 // Use the native property-descriptor setter so React-controlled inputs pick up

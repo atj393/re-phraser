@@ -14,7 +14,7 @@ export default defineManifest({
   name: 'Re-Phraser',
   version: pkg.version,
   description:
-    'Rewrite selected text in any editable field using your AI chat — no API key, no scraping, no automation.',
+    'Rewrite selected text in any editable field using your AI chat - no API key, no scraping, no automation.',
   icons: {
     '16': 'src/assets/icons/icon16.png',
     '32': 'src/assets/icons/icon32.png',
@@ -22,7 +22,7 @@ export default defineManifest({
     '128': 'src/assets/icons/icon128.png',
   },
   action: {
-    default_title: 'Re-Phraser — open settings',
+    default_title: 'Re-Phraser - open settings',
     default_icon: {
       '16': 'src/assets/icons/icon16.png',
       '32': 'src/assets/icons/icon32.png',

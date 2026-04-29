@@ -109,7 +109,7 @@ export function OptionsApp(): JSX.Element {
 
       {needsSetup && (
         <section className="pr-card pr-welcome">
-          <h2>👋 Welcome — one quick setup step</h2>
+          <h2>👋 Welcome - one quick setup step</h2>
           <p className="pr-muted">
             Re-Phraser works by sending your text to an AI chat tab you already have open.
             You just need to tell it which tab to use.
@@ -119,7 +119,7 @@ export function OptionsApp(): JSX.Element {
               <strong>Open your AI chat and start a conversation</strong>
               <span>
                 Go to <a href="https://chatgpt.com" target="_blank" rel="noreferrer">chatgpt.com</a> (or
-                Claude, Gemini, etc.) and send any message — even just "Hi". A conversation URL will be created.
+                Claude, Gemini, etc.) and send any message - even just "Hi". A conversation URL will be created.
               </span>
             </li>
             <li>
@@ -139,7 +139,7 @@ export function OptionsApp(): JSX.Element {
               <strong>Select text on any page and start rewriting</strong>
               <span>
                 Highlight something you typed, then pick <strong>Quick</strong>, <strong>Normal</strong>,
-                or <strong>Formal</strong>. The AI rewrites it and the result appears right in the popup — one click to apply.
+                or <strong>Formal</strong>. The AI rewrites it and the result appears right in the popup - one click to apply.
               </span>
             </li>
           </ol>
@@ -220,7 +220,7 @@ export function OptionsApp(): JSX.Element {
           >
             {(Object.keys(MODE_LABELS) as RewriteMode[]).map((m) => (
               <option key={m} value={m}>
-                {MODE_LABELS[m]} — {MODE_INSTRUCTIONS[m]}
+                {MODE_LABELS[m]} - {MODE_INSTRUCTIONS[m]}
               </option>
             ))}
           </select>

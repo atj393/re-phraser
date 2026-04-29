@@ -1,5 +1,5 @@
 // Supported input types where selectionStart/selectionEnd are defined by spec.
-// Password is intentionally excluded — we never offer to rewrite passwords.
+// Password is intentionally excluded - we never offer to rewrite passwords.
 export const SUPPORTED_INPUT_TYPES = new Set(['text', 'search', 'email', 'url', '']);
 
 export function isSupportedInput(el: Element | null): el is HTMLInputElement {

@@ -29,7 +29,7 @@ describe('sanitizeClipboardText', () => {
 
   it('does not strip an internal code fence', () => {
     const text = 'See the snippet:\n```js\nconst x=1;\n```\nDone.';
-    // Not wrapping the whole text — should be left alone
+    // Not wrapping the whole text - should be left alone
     expect(sanitizeClipboardText(text)).toBe(text);
   });
 
@@ -48,7 +48,7 @@ describe('sanitizeClipboardText', () => {
 });
 
 // ---------------------------------------------------------------------------
-// replaceEditableContent — textarea path
+// replaceEditableContent - textarea path
 // ---------------------------------------------------------------------------
 
 describe('replaceEditableContent (textarea)', () => {
@@ -71,7 +71,7 @@ describe('replaceEditableContent (textarea)', () => {
 });
 
 // ---------------------------------------------------------------------------
-// replaceEditableContent — input path
+// replaceEditableContent - input path
 // ---------------------------------------------------------------------------
 
 describe('replaceEditableContent (input)', () => {
@@ -86,7 +86,7 @@ describe('replaceEditableContent (input)', () => {
 });
 
 // ---------------------------------------------------------------------------
-// replaceEditableContent — unsupported element
+// replaceEditableContent - unsupported element
 // ---------------------------------------------------------------------------
 
 describe('replaceEditableContent (unsupported)', () => {

@@ -20,7 +20,7 @@ if (!w[INIT_FLAG]) {
 }
 
 function init(): void {
-  console.log('[PR] content script init — url:', location.href);
+  console.log('[PR] content script init - url:', location.href);
 
   // Listen for prompts forwarded from the background to inject into this
   // page's chat composer (this is what makes auto paste-and-send work).
@@ -85,7 +85,7 @@ function init(): void {
     ui.setSelectionInfo(info);
   }
 
-  // SPA navigation detection — re-evaluate when the URL changes without a page reload.
+  // SPA navigation detection - re-evaluate when the URL changes without a page reload.
   function checkNavigation(): void {
     const current = location.href;
     if (current !== lastUrl) {

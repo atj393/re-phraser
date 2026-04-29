@@ -9,7 +9,7 @@ import type { EditableSelectionInfo } from './selection';
 import { replaceEditableContent } from './replace';
 
 // ---------------------------------------------------------------------------
-// Page-level styles — scoped to [data-re-phraser-ui] to avoid leaking
+// Page-level styles - scoped to [data-re-phraser-ui] to avoid leaking
 // ---------------------------------------------------------------------------
 const PAGE_STYLES = `
 [data-re-phraser-ui] *,[data-re-phraser-ui] *::before,[data-re-phraser-ui] *::after{box-sizing:border-box;margin:0;padding:0}
@@ -170,7 +170,7 @@ function panelPos(btn: { top: number; left: number }): {
 
 // ---------------------------------------------------------------------------
 // Module-level state bridge
-// (one floating UI instance per content script — safe to use module scope)
+// (one floating UI instance per content script - safe to use module scope)
 // ---------------------------------------------------------------------------
 
 type FloatingPhase = 'idle' | 'button' | 'panel';
@@ -276,7 +276,7 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
   const [settings, setSettings] = useState<ExtensionSettings>(DEFAULT_SETTINGS);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Always-current refs — written synchronously during render so that the
+  // Always-current refs - written synchronously during render so that the
   // stable native event handler always reads the latest values.
   const stateRef = useRef(state);
   const settingsRef = useRef(settings);
@@ -319,7 +319,7 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
   const handleAction = useCallback(
     async (action: string | null, btn: HTMLElement): Promise<void> => {
       if (!action) return;
-      console.log('[PR] handleAction:', action, '— current phase:', stateRef.current.phase);
+      console.log('[PR] handleAction:', action, '- current phase:', stateRef.current.phase);
       const cur = stateRef.current;
       const cfg = settingsRef.current;
 
@@ -417,12 +417,12 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
               reason === 'inject-failed'
             ) {
               setStatusMsg(
-                'Auto-send failed — prompt copied, paste it manually.',
+                'Auto-send failed - prompt copied, paste it manually.',
                 'error',
               );
             } else {
               setStatusMsg(
-                'Could not reach AI tab — close it, reopen it fresh, then retry.',
+                'Could not reach AI tab - close it, reopen it fresh, then retry.',
                 'error',
               );
             }
@@ -456,7 +456,7 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
 
     const onClick = (e: Event) => {
       const target = e.target instanceof Element ? e.target : null;
-      console.log('[PR] click on mount — target:', target);
+      console.log('[PR] click on mount - target:', target);
       if (!target) return;
       const btn = target.closest('[data-action]') as HTMLElement | null;
       if (!btn) return;
@@ -536,7 +536,7 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
             className="pr-tool-btn"
             data-action="send-mode"
             data-mode={m}
-            title={`Rewrite — ${MODE_LABELS[m]}`}
+            title={`Rewrite - ${MODE_LABELS[m]}`}
           >
             {MODE_ICONS[m]}
             {MODE_LABELS[m]}
@@ -635,7 +635,7 @@ export function mountFloatingUi(): FloatingUiHandle {
   document.head.appendChild(styleEl);
   _styleEl = styleEl;
 
-  // Host element rendered directly into document.body — no shadow DOM.
+  // Host element rendered directly into document.body - no shadow DOM.
   // This ensures native click events bubble normally without shadow boundary issues.
   const host = document.createElement('div');
   host.setAttribute('data-re-phraser', 'host');

@@ -11,7 +11,7 @@ import {
 } from '@/content/editable';
 
 // ---------------------------------------------------------------------------
-// Helpers — create elements in jsdom
+// Helpers - create elements in jsdom
 // ---------------------------------------------------------------------------
 
 function input(type: string, extra?: Partial<HTMLInputElement>): HTMLInputElement {
@@ -29,7 +29,7 @@ function textarea(extra?: Partial<HTMLTextAreaElement>): HTMLTextAreaElement {
 
 function ce(text?: string): HTMLDivElement {
   const el = document.createElement('div');
-  // Use setAttribute — jsdom does not reflect the contentEditable IDL property
+  // Use setAttribute - jsdom does not reflect the contentEditable IDL property
   // to the DOM attribute, but getAttribute('contenteditable') works correctly.
   el.setAttribute('contenteditable', 'true');
   if (text) el.innerText = text;
@@ -185,7 +185,7 @@ describe('getSelectedTextFromEditable', () => {
 });
 
 // ---------------------------------------------------------------------------
-// isFullSelectionInsideEditable — textarea / input path
+// isFullSelectionInsideEditable - textarea / input path
 // ---------------------------------------------------------------------------
 
 describe('isFullSelectionInsideEditable (input/textarea)', () => {

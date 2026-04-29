@@ -25,7 +25,7 @@ const ASSISTANT_TURN_SELECTORS = [
   'div[data-message-author-role="assistant"]',
   // Claude
   'div[data-testid^="assistant-message"]',
-  // Generic markdown bubble (fallback — only used if specific selectors miss)
+  // Generic markdown bubble (fallback - only used if specific selectors miss)
   '.markdown.prose',
 ];
 
@@ -59,7 +59,7 @@ async function findElement(
 }
 
 function setEditorText(editor: HTMLElement, text: string): boolean {
-  // Plain textarea / input — bypass framework controlled-input wrappers via
+  // Plain textarea / input - bypass framework controlled-input wrappers via
   // the native value setter so React/Vue/etc pick up the change.
   if (
     editor instanceof HTMLTextAreaElement ||
@@ -188,7 +188,7 @@ async function waitForResponseText(
 }
 
 export async function injectAndSend(prompt: string): Promise<InjectResult> {
-  console.log('[PR] injectAndSend — searching for editor');
+  console.log('[PR] injectAndSend - searching for editor');
   const editor = await findElement(EDITOR_SELECTORS, 6000);
   if (!editor) return { ok: false, reason: 'no-editor' };
   console.log('[PR] editor found:', editor);
@@ -208,7 +208,7 @@ export async function injectAndSend(prompt: string): Promise<InjectResult> {
 
   const sent = await clickSend(5000);
   if (!sent) return { ok: false, reason: 'no-send-button' };
-  console.log('[PR] sent — waiting for assistant response');
+  console.log('[PR] sent - waiting for assistant response');
 
   const text = await waitForResponseText(
     initialCount,

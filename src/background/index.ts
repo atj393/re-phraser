@@ -6,7 +6,7 @@ import type { ExtensionMessage, ExtensionMessageResponse } from '@/shared/messag
 import { loadSettings } from '@/shared/storage';
 import { openOrFocusAiTab } from '@/shared/tabs';
 
-// Session-only state — intentionally not persisted.
+// Session-only state - intentionally not persisted.
 // If the service worker restarts, lastAiTabId is lost and tab search falls
 // back to URL matching, which is still correct behaviour.
 const lastAiTabRef: { value?: number } = {};
