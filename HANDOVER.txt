@@ -1,0 +1,135 @@
+RE-PHRASER - PRODUCT OWNER HANDOVER
+===================================
+Version: 1.0.0
+Prepared for first public release on the Chrome Web Store and Microsoft Edge Add-ons.
+
+
+1. WHAT RE-PHRASER DOES
+-----------------------
+Re-Phraser is a browser extension that helps people rewrite text where they
+type it. The user selects all the text in a message box, chooses a tone
+(Quick, Normal, or Formal), and Re-Phraser sends a personalized rewrite
+request to the user's OWN AI chat tab (for example ChatGPT, Claude, or
+Gemini) that they have already opened and signed in to. It brings the reply
+back as a suggestion. The user then clicks Apply to use it, or Cancel to keep
+their original text.
+
+It is a personal productivity tool. It is NOT an AI service itself, it needs
+no API key, it has no account, and it has no server of its own. It is not
+affiliated with any AI company.
+
+
+2. WHAT IS COMPLETE
+-------------------
+- The full rewrite flow: select text -> Quick/Normal/Formal appears
+  immediately -> automatic send to the AI chat -> reply retrieved -> shown as
+  a suggestion -> Apply or Cancel.
+- Recovery cards when something is missing:
+    * No saved chat URL  -> "Set up your AI chat" with Open settings.
+    * Chat not reachable -> "Could not reach your AI chat" with Open AI chat
+      and Open settings (reuses the existing tab; no duplicates).
+- Settings page with the AI chat URL, the personalization fields (About Me,
+  Global Prompt, Avoid These Things), and a "Save and open AI chat" button.
+- New app icon applied everywhere (toolbar, management page, options header,
+  in-page toolbar) in all required sizes (16, 32, 48, 128).
+- Production cleanup: no debug logging left in the shipped code; lint is clean.
+- Packaging scripts that build separate Chrome and Edge ZIPs.
+- End-user README plus privacy, security, support, and store documents.
+
+
+3. REQUIRED USER SETUP (also in the README and store listing)
+-------------------------------------------------------------
+1. Install Re-Phraser.
+2. Open the settings page.
+3. Open your preferred AI chat, start a conversation, send a short message,
+   and copy that conversation URL from the address bar.
+4. Paste and save that URL in Re-Phraser settings.
+5. Select all text in any editable field and choose Quick, Normal, or Formal.
+6. Review the suggestion and click Apply.
+
+Keep the AI chat tab open and signed in while using Re-Phraser.
+
+
+4. RELEASE COMMANDS
+-------------------
+Run these from the project folder:
+
+    npm install            (first time only)
+    npm run release:check  (type-check + tests + lint + build)
+    npm run package:chrome (build + Chrome ZIP)
+    npm run package:edge   (build + Edge ZIP)
+    npm run package:stores (both ZIPs)
+
+To regenerate icons from the source artwork:
+
+    npm run icons
+
+
+5. WHERE THE ZIP FILES ARE CREATED
+----------------------------------
+    releases/re-phraser-v1.0.0-chrome.zip   (upload to Chrome Web Store)
+    releases/re-phraser-v1.0.0-edge.zip     (upload to Microsoft Edge Add-ons)
+
+Both ZIPs contain the same extension. Only the file names differ. The
+"releases" folder is ignored by Git and is not committed.
+
+
+6. FINAL MANUAL TESTING STEPS (in a real browser)
+-------------------------------------------------
+- Load the built extension (the dist folder) or install the ZIP.
+- Confirm a fresh install opens the settings page.
+- Save a valid AI chat URL; confirm "Save and open AI chat" opens the tab.
+- Select all text in a field; confirm Quick, Normal, Formal appear at once.
+- Click a mode; confirm the suggestion comes back and Apply/Cancel work.
+- Clear the URL and try a mode; confirm the "Set up your AI chat" card.
+- Close the chat tab and try a mode; confirm the "Could not reach your AI
+  chat" card, and that Open AI chat reuses one tab (no duplicates).
+- Test in a plain text box and in a rich editor (for example Gmail).
+
+A fuller checklist is in docs/store/submission-checklist.md.
+
+
+7. STORE DOCUMENTS TO USE DURING SUBMISSION
+-------------------------------------------
+    docs/store/chrome-web-store-listing.md      (Chrome listing copy)
+    docs/store/microsoft-edge-addons-listing.md (Edge listing copy)
+    docs/store/permission-justifications.md     (permission explanations)
+    docs/store/privacy-disclosure.md            (store privacy form answers)
+    docs/store/reviewer-test-instructions.md    (notes for store reviewers)
+    docs/store/screenshot-plan.md               (which screenshots to capture)
+    docs/store/submission-checklist.md          (final go/no-go checklist)
+    docs/privacy-policy.md                      (public privacy policy)
+    SECURITY.md, SUPPORT.md, LICENSE, CHANGELOG.md
+
+
+8. REMAINING WORK BEFORE STORE UPLOAD
+-------------------------------------
+- REAL SCREENSHOTS: capture them from the actual running extension
+  (1280x800). Required shots are listed in docs/store/screenshot-plan.md.
+  Remove any sensitive text first. Do not use fake or mockup screenshots.
+- STORE DEVELOPER ACCOUNTS: register/verify a Chrome Web Store developer
+  account and a Microsoft Edge Add-ons (Partner Center) developer account.
+- PRIVACY POLICY URL: after the GitHub repository is public, confirm the
+  privacy policy URL
+  (https://github.com/atj393/local-rephraser/blob/main/docs/privacy-policy.md)
+  and paste it into both store listings (Edge requires one).
+- SECURITY CONTACT: add a private security reporting method in SECURITY.md
+  (for example, enable GitHub Private Vulnerability Reporting).
+- After approval, replace "Coming soon" in README.md and the listings with
+  the live store URLs.
+
+
+9. KNOWN LIMITATIONS (stated honestly)
+--------------------------------------
+- Re-Phraser needs the user's own signed-in AI chat. It cannot sign in for
+  them and provides no AI of its own.
+- It works with text-based AI chat sites the user configures. It cannot
+  guarantee compatibility with every AI chat site or every website editor;
+  some custom editors may not be supported.
+- The user's selected text is sent to their chosen third-party AI chat, which
+  processes it under that provider's own terms. The user decides what to send.
+- If the AI chat is slow, rate-limited, signed out, or on a different
+  conversation than the saved URL, a rewrite may not return; the recovery
+  cards guide the user to fix it.
+- No automatic retries: after a failure the user re-triggers the rewrite
+  themselves.

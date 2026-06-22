@@ -1,20 +1,24 @@
 import { defineManifest } from '@crxjs/vite-plugin';
 import pkg from '../package.json';
 
-// Manifest V3 declaration. Permissions are kept minimal:
-// - storage: persist user settings (About Me, Global Prompt, etc.)
-// - tabs: required to find/focus an existing AI chat tab and avoid duplicates
-// - clipboardRead: needed by Apply Result (only invoked after explicit click)
-// - clipboardWrite: needed by Copy Prompt (only invoked after explicit click)
-// host permissions are NOT requested. Content script uses <all_urls> via
-// "matches" only; the script reads/writes the active editable element under
-// activeTab, never network requests, never remote code.
+// Manifest V3 declaration. Permissions are kept minimal - only what the
+// extension actually uses:
+// - storage: persist user settings (About Me, Global Prompt, AI chat URL, etc.)
+// - tabs: find, open, and focus the user's configured AI chat tab (and avoid
+//   opening duplicates) so the prompt can be sent there
+// - clipboardWrite: copy the generated prompt to the clipboard as a manual
+//   paste fallback when automatic send is unavailable
+// No host_permissions are requested. The content script uses <all_urls> via
+// "matches" only: it renders the in-page UI, reads the user's selection in the
+// focused editable element, and - on the user's own signed-in AI chat tab -
+// types the prompt and reads back the reply. The extension makes no network
+// requests of its own, runs no remote code, and has no backend server.
 export default defineManifest({
   manifest_version: 3,
   name: 'Re-Phraser',
   version: pkg.version,
   description:
-    'Rewrite selected text in any editable field using your AI chat - no API key, no scraping, no automation.',
+    'Rewrite selected text using your own AI chat tab. Pick Quick, Normal, or Formal, then review and apply the reply. No API key.',
   icons: {
     '16': 'src/assets/icons/icon16.png',
     '32': 'src/assets/icons/icon32.png',
@@ -38,7 +42,7 @@ export default defineManifest({
     service_worker: 'src/background/index.ts',
     type: 'module',
   },
-  permissions: ['storage', 'tabs', 'activeTab', 'clipboardWrite', 'clipboardRead'],
+  permissions: ['storage', 'tabs', 'clipboardWrite'],
   content_scripts: [
     {
       // <all_urls> is required because the user may rephrase text in editable

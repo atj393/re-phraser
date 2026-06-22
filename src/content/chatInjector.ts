@@ -188,10 +188,8 @@ async function waitForResponseText(
 }
 
 export async function injectAndSend(prompt: string): Promise<InjectResult> {
-  console.log('[PR] injectAndSend - searching for editor');
   const editor = await findElement(EDITOR_SELECTORS, 6000);
   if (!editor) return { ok: false, reason: 'no-editor' };
-  console.log('[PR] editor found:', editor);
 
   // Snapshot existing assistant turns so we can spot the new one.
   const initialTurns = getAssistantTurns();
@@ -208,7 +206,6 @@ export async function injectAndSend(prompt: string): Promise<InjectResult> {
 
   const sent = await clickSend(5000);
   if (!sent) return { ok: false, reason: 'no-send-button' };
-  console.log('[PR] sent - waiting for assistant response');
 
   const text = await waitForResponseText(
     initialCount,
@@ -217,7 +214,6 @@ export async function injectAndSend(prompt: string): Promise<InjectResult> {
     RESPONSE_STABILITY_MS,
   );
   if (!text) return { ok: false, reason: 'no-response' };
-  console.log('[PR] response received, length:', text.length);
 
   return { ok: true, text };
 }

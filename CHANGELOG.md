@@ -6,11 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [Unreleased]
+## [1.0.0] - 2026-06-22
+
+First public release, prepared for the Chrome Web Store and Microsoft Edge Add-ons.
+
+### Added
+- Recovery actions when a rewrite cannot complete: a "Set up your AI chat" card (missing AI chat URL) and a "Could not reach your AI chat" card (chat tab closed or unresponsive), each keeping the panel open with a clear next step.
+- **Save and open AI chat** button on the settings page (validates, saves, then opens or focuses the configured chat tab).
+- New production app icon applied everywhere (toolbar, extensions management page, options header, in-page toolbar), generated from a single source artwork via `npm run icons` (`scripts/generate-icons.mjs`).
+- Separate Chrome and Edge packaging commands (`npm run package:chrome`, `npm run package:edge`, `npm run package:stores`) producing `releases/re-phraser-v<version>-chrome.zip` and `-edge.zip`, plus `npm run release:check`.
+- End-user product README and release documentation: privacy policy, security policy, support guide, store listings (Chrome and Edge), permission justifications, privacy disclosure, reviewer test instructions, screenshot plan, submission checklist, `CLAUDE.md`, and `HANDOVER.txt`.
 
 ### Changed
-- Rebranded from **Personal Rewriter** to **Re-Phraser** across all source files, UI, manifest, and documentation.
-- Extension icon (toolbar, options page header, floating toolbar logo) now uses the `rp` pixel-art logo.
+- Bumped version to 1.0.0 for the first public store release.
+- Confirmed the direct rewrite flow: selecting all text shows Quick, Normal, and Formal immediately; choosing a mode sends the prompt to the configured AI chat automatically, retrieves the reply, and shows it as a suggestion with Apply and Cancel.
+- Rewrote the manifest description to accurately reflect that the extension uses the user's own AI chat tab (removed the inaccurate "no automation/no scraping" wording).
+- Rebranded from **Personal Rewriter** to **Re-Phraser** across source, UI, manifest, and documentation; updated the app icon.
+
+### Removed
+- Trimmed unused permissions: dropped `activeTab` and `clipboardRead`. The extension now declares only `storage`, `tabs`, `clipboardWrite`, and the all-sites content script.
+- Removed debug `console.log` statements from production runtime source.
 
 ---
 

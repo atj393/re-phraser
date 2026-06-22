@@ -298,10 +298,6 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
   stateRef.current = state;
   settingsRef.current = settings;
 
-  useEffect(() => {
-    console.log('[PR] FloatingUiComponent mounted');
-  }, []);
-
   // Register state setter for external access.
   useEffect(() => {
     _setState = setState;
@@ -334,7 +330,6 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
   const handleAction = useCallback(
     async (action: string | null, btn: HTMLElement): Promise<void> => {
       if (!action) return;
-      console.log('[PR] handleAction:', action, '- current phase:', stateRef.current.phase);
       const cur = stateRef.current;
       const cfg = settingsRef.current;
 
@@ -486,15 +481,11 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
 
   // Attach native click/keydown delegation on the mount container.
   useEffect(() => {
-    console.log('[PR] attaching native click/keydown listeners to mount', mountEl);
-
     const onClick = (e: Event) => {
       const target = e.target instanceof Element ? e.target : null;
-      console.log('[PR] click on mount - target:', target);
       if (!target) return;
       const btn = target.closest('[data-action]') as HTMLElement | null;
       if (!btn) return;
-      console.log('[PR] dispatching action:', btn.getAttribute('data-action'));
       void handleAction(btn.getAttribute('data-action'), btn);
     };
 
@@ -716,8 +707,6 @@ export function mountFloatingUi(): FloatingUiHandle {
     'all:unset;position:fixed;top:0;left:0;width:0;height:0;overflow:visible;z-index:2147483647';
   document.body.appendChild(host);
   _hostEl = host;
-
-  console.log('[PR] host mounted in document.body (no shadow DOM):', host);
 
   const root = createRoot(host);
   root.render(<FloatingUiComponent mountEl={host} />);

@@ -20,8 +20,6 @@ if (!w[INIT_FLAG]) {
 }
 
 function init(): void {
-  console.log('[PR] content script init - url:', location.href);
-
   // Listen for prompts forwarded from the background to inject into this
   // page's chat composer (this is what makes auto paste-and-send work).
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
@@ -45,7 +43,6 @@ function init(): void {
   // Load settings once; re-evaluate when they change.
   void loadSettings().then((s) => {
     settings = s;
-    console.log('[PR] settings loaded, siteEnabled:', isSiteEnabled(settings));
     if (isSiteEnabled(settings)) ensureUi();
     else teardownUi();
   });
@@ -61,7 +58,6 @@ function init(): void {
 
   function ensureUi(): void {
     if (!ui) {
-      console.log('[PR] mounting floating UI');
       ui = mountFloatingUi();
     }
   }
