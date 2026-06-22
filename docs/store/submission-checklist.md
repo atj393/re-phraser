@@ -4,8 +4,8 @@ A practical final checklist for publishing Re-Phraser to the Chrome Web Store an
 
 ## Identity and version
 
-- [ ] Extension name is **Re-Phraser** (manifest `name`).
-- [ ] Version is **1.0.0** and consistent across `package.json`, the generated `manifest.json`, `CHANGELOG.md`, `README.md`, and the store listing docs.
+- [ ] Extension name is **Re-Phraser: AI Text Rewriter** (manifest `name`).
+- [ ] Version is **1.0.1** and consistent across `package.json`, the generated `manifest.json`, `CHANGELOG.md`, `README.md`, and the store listing docs.
 - [ ] Manifest description is accurate and end-user friendly (no "no automation" claim, since the extension does drive your AI chat tab).
 
 ## Icons
@@ -18,8 +18,8 @@ A practical final checklist for publishing Re-Phraser to the Chrome Web Store an
 ## Build and package
 
 - [ ] `npm run release:check` passes (typecheck, test, lint, build).
-- [ ] `npm run package:chrome` produced `releases/re-phraser-v1.0.0-chrome.zip`.
-- [ ] `npm run package:edge` produced `releases/re-phraser-v1.0.0-edge.zip`.
+- [ ] `npm run package:chrome` produced `releases/re-phraser-v1.0.1-chrome.zip`.
+- [ ] `npm run package:edge` produced `releases/re-phraser-v1.0.1-edge.zip`.
 - [ ] Each ZIP has `manifest.json` at its root.
 - [ ] Each ZIP contains the runtime PNG icons.
 - [ ] Each ZIP contains **no** source maps (`*.map`), **no** `node_modules`, **no** tests, **no** TypeScript sources, **no** `docs/`, and **no** `icon-source.png`.

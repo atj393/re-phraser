@@ -1,7 +1,7 @@
 {
   "name": "re-phraser-extension",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "Re-Phraser: Chrome MV3 extension that rewrites selected text using any AI chat - no API key, no automation, no telemetry.",
   "keywords": [

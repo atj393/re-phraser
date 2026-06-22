@@ -1,0 +1,99 @@
+/* Popup-only styles. Reuses the shared theme variables and .pr-btn from
+   common.css; overrides the page body sizing for the small popup surface. */
+
+body {
+  width: 300px;
+  margin: 0;
+  padding: 0;
+}
+
+.pr-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  max-width: none;
+}
+
+.pr-popup__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--pr-border);
+}
+
+.pr-popup__head img {
+  border-radius: 6px;
+}
+
+.pr-popup__head h1 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.pr-popup__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--pr-card-bg);
+  border: 1px solid var(--pr-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.pr-popup__row--muted {
+  opacity: 0.6;
+}
+
+.pr-popup__label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pr-popup__label strong {
+  font-size: 0.92rem;
+}
+
+.pr-popup__label small {
+  font-size: 0.78rem;
+  color: var(--pr-muted);
+}
+
+.pr-popup__host {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pr-popup__switch {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--pr-accent);
+  cursor: pointer;
+}
+
+.pr-popup__switch:disabled {
+  cursor: default;
+}
+
+.pr-popup__note {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--pr-muted);
+  line-height: 1.4;
+}
+
+.pr-popup__foot {
+  display: flex;
+}
+
+.pr-popup__foot .pr-btn {
+  width: 100%;
+  text-align: center;
+}

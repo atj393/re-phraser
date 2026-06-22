@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.1.0] - 2026-06-22
+
+### Added
+- Browser toolbar **popup**: clicking the toolbar icon now opens a small popup with a global on/off switch (`enableOnAllSites`), a per-site enable/ignore toggle for the current website (`disabledSites`), and an **Open settings** button. The popup reuses the existing settings and storage; the content script's existing storage listener shows or removes the floating UI when these settings change.
+
+### Changed
+- The toolbar icon opens the popup instead of immediately opening the options page (the action-click-to-open-settings listener was removed from the background).
+
+The automatic rewrite flow (immediate Quick/Normal/Formal, automatic send/retrieve, suggestion preview, Apply/Cancel) and receiver recovery are unchanged.
+
+---
+
+## [1.0.1] - 2026-06-22
+
+### Changed
+- Renamed the public product name to **Re-Phraser: AI Text Rewriter** (manifest `name`, action title, README, and store listings). The internal npm package name is unchanged.
+- Updated the manifest description to: "Rewrite selected text with your configured AI chat. Choose Quick, Normal, or Formal, then review and apply each suggestion."
+- Bumped the version to 1.0.1 (patch) because 1.0.0 was already uploaded to the Chrome Web Store.
+
+No changes to extension behavior, permissions, privacy behavior, or the Quick/Normal/Formal rewrite flow.
+
+---
+
 ## [1.0.0] - 2026-06-22
 
 First public release, prepared for the Chrome Web Store and Microsoft Edge Add-ons.

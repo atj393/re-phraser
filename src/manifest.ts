@@ -15,10 +15,10 @@ import pkg from '../package.json';
 // requests of its own, runs no remote code, and has no backend server.
 export default defineManifest({
   manifest_version: 3,
-  name: 'Re-Phraser',
+  name: 'Re-Phraser: AI Text Rewriter',
   version: pkg.version,
   description:
-    'Rewrite selected text using your own AI chat tab. Pick Quick, Normal, or Formal, then review and apply the reply. No API key.',
+    'Rewrite selected text with your configured AI chat. Choose Quick, Normal, or Formal, then review and apply each suggestion.',
   icons: {
     '16': 'src/assets/icons/icon16.png',
     '32': 'src/assets/icons/icon32.png',
@@ -26,7 +26,8 @@ export default defineManifest({
     '128': 'src/assets/icons/icon128.png',
   },
   action: {
-    default_title: 'Re-Phraser - open settings',
+    default_title: 'Re-Phraser: AI Text Rewriter - open settings',
+    default_popup: 'src/popup/index.html',
     default_icon: {
       '16': 'src/assets/icons/icon16.png',
       '32': 'src/assets/icons/icon32.png',

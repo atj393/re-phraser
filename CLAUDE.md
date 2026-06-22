@@ -4,7 +4,7 @@ Guidance for future Claude Code (and human) work on this repository. Read this b
 
 ## Product overview
 
-Re-Phraser is a Manifest V3 browser extension (Chrome + Microsoft Edge) that rewrites text the user has already typed. The user selects all text in an editable field, picks **Quick**, **Normal**, or **Formal**, and the extension sends a personalized rewrite request to the user's **own already-open, signed-in AI chat tab** (for example ChatGPT, Claude, or Gemini). It reads the reply and shows it as a suggestion to **Apply** or **Cancel**.
+Re-Phraser (public store name: **Re-Phraser: AI Text Rewriter**) is a Manifest V3 browser extension (Chrome + Microsoft Edge) that rewrites text the user has already typed. The user selects all text in an editable field, picks **Quick**, **Normal**, or **Formal**, and the extension sends a personalized rewrite request to the user's **own already-open, signed-in AI chat tab** (for example ChatGPT, Claude, or Gemini). It reads the reply and shows it as a suggestion to **Apply** or **Cancel**.
 
 It is a personal productivity tool. It is **not** an AI provider, uses **no** API key, has **no** backend server, and is **not** affiliated with any AI company.
 
@@ -24,6 +24,9 @@ src/
     chatInjector.ts        # runs on the AI chat tab: types prompt, sends, reads reply
     siteCheck.ts           # per-site enable/disable
   options/                 # React settings page (OptionsApp.tsx, useSettings.ts)
+  popup/                   # toolbar action popup: global + per-site toggles,
+                          #   reuses settings/storage; hostname.ts is popup-only
+
   shared/
     types.ts               # ExtensionSettings, RewriteMode, etc.
     messages.ts            # typed runtime messages + sendMessage helper
@@ -48,6 +51,7 @@ tests/                     # vitest unit tests
 - **Background service worker** (`background/index.ts`) owns tab reuse and orchestration. On `SEND_PROMPT_TO_AI` it opens/focuses the configured AI chat tab (in the background), waits for it to load, sends `INJECT_PROMPT` to that tab, and returns the reply text. It also handles `OPEN_OR_FOCUS_AI_TAB` and `OPEN_OPTIONS`.
 - **chatInjector** (`content/chatInjector.ts`) runs on the AI chat tab: finds the composer, types the prompt, clicks send, waits for the reply to finish, and returns the text.
 - **Options page** (`options/`) edits settings, validates the AI chat URL, and has a **Save and open AI chat** button.
+- **Popup** (`popup/`) opens from the toolbar icon. It only toggles `enableOnAllSites` (global) and `disabledSites` (per current site) and opens the options page. It saves via the existing storage helper; the content script's existing `onSettingsChanged` listener shows/removes the floating UI. The popup never sends content-script messages and does not touch the rewrite flow. `popup/hostname.ts` deliberately duplicates the small site-match rule rather than refactoring `content/siteCheck.ts`.
 - **Shared** utilities are framework-free and unit-tested.
 
 ## Current direct rewrite flow (do not break)

@@ -1,14 +1,14 @@
 <div align="center">
 
-<img src="docs/assets/re-phraser-icon-128.png" alt="Re-Phraser" width="96" height="96" />
+<img src="docs/assets/re-phraser-icon-128.png" alt="Re-Phraser: AI Text Rewriter" width="96" height="96" />
 
-# Re-Phraser
+# Re-Phraser: AI Text Rewriter
 
 **Rewrite text right where you type it - choose a tone, review the suggestion, apply it only if you like it.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-4285F4)](src/manifest.ts)
-[![Version](https://img.shields.io/badge/version-1.0.0-informational)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-informational)](CHANGELOG.md)
 
 Chrome Web Store: **Coming soon** &nbsp;·&nbsp; Microsoft Edge Add-ons: **Coming soon**
 
@@ -188,8 +188,8 @@ Load the unpacked extension by pointing your browser's extensions page (in devel
 Package store-ready ZIPs:
 
 ```bash
-npm run package:chrome   # -> releases/re-phraser-v1.0.0-chrome.zip
-npm run package:edge     # -> releases/re-phraser-v1.0.0-edge.zip
+npm run package:chrome   # -> releases/re-phraser-v1.0.1-chrome.zip
+npm run package:edge     # -> releases/re-phraser-v1.0.1-edge.zip
 ```
 
 More detail for contributors and future maintainers is in [CLAUDE.md](CLAUDE.md).

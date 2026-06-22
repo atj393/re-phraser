@@ -1,7 +1,8 @@
-RE-PHRASER - PRODUCT OWNER HANDOVER
-===================================
-Version: 1.0.0
-Prepared for first public release on the Chrome Web Store and Microsoft Edge Add-ons.
+RE-PHRASER: AI TEXT REWRITER - PRODUCT OWNER HANDOVER
+=====================================================
+Public product name: Re-Phraser: AI Text Rewriter
+Version: 1.0.1
+Prepared for the Chrome Web Store and Microsoft Edge Add-ons.
 
 
 1. WHAT RE-PHRASER DOES
@@ -67,8 +68,8 @@ To regenerate icons from the source artwork:
 
 5. WHERE THE ZIP FILES ARE CREATED
 ----------------------------------
-    releases/re-phraser-v1.0.0-chrome.zip   (upload to Chrome Web Store)
-    releases/re-phraser-v1.0.0-edge.zip     (upload to Microsoft Edge Add-ons)
+    releases/re-phraser-v1.0.1-chrome.zip   (upload to Chrome Web Store)
+    releases/re-phraser-v1.0.1-edge.zip     (upload to Microsoft Edge Add-ons)
 
 Both ZIPs contain the same extension. Only the file names differ. The
 "releases" folder is ignored by Git and is not committed.

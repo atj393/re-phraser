@@ -17,10 +17,9 @@ chrome.runtime.onInstalled.addListener((details) => {
   }
 });
 
-// Open the options page when the user clicks the extension action icon.
-chrome.action?.onClicked.addListener(() => {
-  void chrome.runtime.openOptionsPage();
-});
+// The toolbar action now opens a popup (action.default_popup in the manifest),
+// so the previous action-click-to-open-settings listener has been removed.
+// All other message handlers below are unchanged.
 
 chrome.runtime.onMessage.addListener(
   (

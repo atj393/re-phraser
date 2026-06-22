@@ -1,19 +1,19 @@
 # Microsoft Edge Add-ons Listing (copy-paste ready)
 
-Version: 1.0.0. Replace placeholder URLs after the repository's public path and store listing are confirmed. Do not invent ratings, user counts, awards, testimonials, or compatibility claims.
+Version: 1.0.1. Replace placeholder URLs after the repository's public path and store listing are confirmed. Do not invent ratings, user counts, awards, testimonials, or compatibility claims.
 
 ---
 
 ## Product name
 
 ```
-Re-Phraser
+Re-Phraser: AI Text Rewriter
 ```
 
 ## Short description
 
 ```
-Rewrite selected text using your own AI chat tab. Pick Quick, Normal, or Formal, then review and apply the reply. No API key.
+Rewrite selected text with your configured AI chat. Choose Quick, Normal, or Formal, then review and apply each suggestion.
 ```
 
 ## Category
@@ -95,7 +95,7 @@ https://github.com/atj393/local-rephraser/issues
 
 ```bash
 npm run package:edge
-# -> releases/re-phraser-v1.0.0-edge.zip
+# -> releases/re-phraser-v1.0.1-edge.zip
 ```
 
 ## Assets still required before submission
