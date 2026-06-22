@@ -87,6 +87,10 @@ const PAGE_STYLES = `
 [data-re-phraser-ui] .pr-status--error{color:#EF4444}
 [data-re-phraser-ui] .pr-status--success{color:#10B981}
 
+/* ── Recovery card (shown only after a failure) ── */
+[data-re-phraser-ui] .pr-recovery-title{font-size:14px;font-weight:700;color:#0F172A}
+[data-re-phraser-ui] .pr-recovery-text{font-size:12px;line-height:1.55;color:#475569}
+
 /* ── Dark mode ────────────────────────────── */
 @media(prefers-color-scheme:dark){
   [data-re-phraser-ui]{color:#E2E8F0}
@@ -111,6 +115,8 @@ const PAGE_STYLES = `
   [data-re-phraser-ui] .pr-status{color:#475569}
   [data-re-phraser-ui] .pr-status--error{color:#F87171}
   [data-re-phraser-ui] .pr-status--success{color:#34D399}
+  [data-re-phraser-ui] .pr-recovery-title{color:#E2E8F0}
+  [data-re-phraser-ui] .pr-recovery-text{color:#94A3B8}
 }
 `;
 
@@ -175,6 +181,13 @@ function panelPos(btn: { top: number; left: number }): {
 
 type FloatingPhase = 'idle' | 'button' | 'panel';
 
+// Reactive recovery shown inside the panel ONLY after a rewrite request fails,
+// so the user always has a useful next step instead of just "Close".
+// - 'missing-url': SEND_PROMPT_TO_AI returned no-url
+// - 'open-ai-chat': any other failure (no-response/no-editor/no-send-button/
+//   inject-failed/connection error/"could not reach AI tab")
+type RecoveryState = 'none' | 'missing-url' | 'open-ai-chat';
+
 interface FloatingState {
   phase: FloatingPhase;
   info: EditableSelectionInfo | null;
@@ -183,6 +196,7 @@ interface FloatingState {
   statusKind: 'info' | 'error' | 'success';
   pendingResult: string | null;
   awaitingResponse: boolean;
+  recovery: RecoveryState;
 }
 
 type StateSetter = React.Dispatch<React.SetStateAction<FloatingState>>;
@@ -272,6 +286,7 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
     statusKind: 'info',
     pendingResult: null,
     awaitingResponse: false,
+    recovery: 'none',
   });
   const [settings, setSettings] = useState<ExtensionSettings>(DEFAULT_SETTINGS);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -343,6 +358,7 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
           statusKind: 'info',
           pendingResult: null,
           awaitingResponse: false,
+          recovery: 'none',
         }));
 
       const applyText = (target: HTMLElement, text: string) => {
@@ -374,6 +390,7 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
             awaitingResponse: true,
             status: '',
             pendingResult: null,
+            recovery: 'none',
           }));
 
           const promptText = buildRewritePrompt({
@@ -400,31 +417,25 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
             const data = (res as { ok: true; data?: unknown }).data;
             const responseText = typeof data === 'string' ? data.trim() : '';
             if (responseText) {
-              setState((prev) => ({ ...prev, pendingResult: responseText }));
+              // Successful AI result: clear any prior recovery and show it.
+              setState((prev) => ({
+                ...prev,
+                pendingResult: responseText,
+                recovery: 'none',
+              }));
             } else {
               setStatusMsg('Sent, but could not read the reply.', 'error');
             }
           } else {
             const reason = (res as { ok: false; error: string }).error;
+            // Keep the panel open and route to an actionable recovery card.
             if (reason === 'no-url') {
-              setStatusMsg('No AI chat URL set. Opening settings…', 'error');
-              void sendMessage({ type: 'OPEN_OPTIONS' });
-            } else if (reason === 'no-response') {
-              setStatusMsg('AI did not reply in time.', 'error');
-            } else if (
-              reason === 'no-editor' ||
-              reason === 'no-send-button' ||
-              reason === 'inject-failed'
-            ) {
-              setStatusMsg(
-                'Auto-send failed - prompt copied, paste it manually.',
-                'error',
-              );
+              // Do NOT auto-open settings; show the setup recovery card.
+              setState((prev) => ({ ...prev, status: '', recovery: 'missing-url' }));
             } else {
-              setStatusMsg(
-                'Could not reach AI tab - close it, reopen it fresh, then retry.',
-                'error',
-              );
+              // no-response / no-editor / no-send-button / inject-failed /
+              // connection error / "could not reach AI tab" all land here.
+              setState((prev) => ({ ...prev, status: '', recovery: 'open-ai-chat' }));
             }
           }
           break;
@@ -445,6 +456,29 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
         case 'settings':
           void sendMessage({ type: 'OPEN_OPTIONS' });
           break;
+
+        case 'recovery-open-chat': {
+          // Reuse the background tab-reuse logic; do NOT auto-retry the rewrite.
+          const res = await sendMessage({ type: 'OPEN_OR_FOCUS_AI_TAB' });
+          if (res.ok) {
+            setStatusMsg(
+              'AI chat opened. Return here and select a mode again.',
+              'success',
+              6000,
+            );
+          } else {
+            const reason = (res as { ok: false; error: string }).error;
+            if (reason === 'no-url') {
+              setState((prev) => ({ ...prev, status: '', recovery: 'missing-url' }));
+            } else {
+              setStatusMsg(
+                'Could not open the saved AI chat. Check the URL in settings.',
+                'error',
+              );
+            }
+          }
+          break;
+        }
       }
     },
     [],
@@ -475,6 +509,7 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
           statusKind: 'info',
           pendingResult: null,
           awaitingResponse: false,
+          recovery: 'none',
         }));
       }
     };
@@ -568,7 +603,44 @@ function FloatingUiComponent({ mountEl }: FloatingUiProps): JSX.Element | null {
       tabIndex={-1}
       style={{ top: pPos.top, left: pPos.left }}
     >
-      {state.awaitingResponse ? (
+      {state.recovery === 'missing-url' ? (
+        <div className="pr-confirm">
+          <p className="pr-recovery-title">Set up your AI chat</p>
+          <p className="pr-recovery-text">
+            Open your preferred AI chat, start a conversation, send a simple
+            message, copy its conversation URL, then paste and save it in
+            Re-Phraser settings.
+          </p>
+          <div className="pr-confirm-actions">
+            <button className="pr-confirm-yes" data-action="settings">
+              Open settings
+            </button>
+            <button className="pr-confirm-no" data-action="close">
+              Close
+            </button>
+          </div>
+        </div>
+      ) : state.recovery === 'open-ai-chat' ? (
+        <div className="pr-confirm">
+          <p className="pr-recovery-title">Could not reach your AI chat</p>
+          <p className="pr-recovery-text">
+            Open the saved AI chat, make sure you are signed in, then try Quick,
+            Normal, or Formal again.
+          </p>
+          <div className="pr-confirm-actions">
+            <button className="pr-confirm-yes" data-action="recovery-open-chat">
+              Open AI chat
+            </button>
+            <button className="pr-confirm-no" data-action="settings">
+              Open settings
+            </button>
+            <button className="pr-confirm-no" data-action="close">
+              Close
+            </button>
+          </div>
+          {statusEl}
+        </div>
+      ) : state.awaitingResponse ? (
         <div className="pr-loading">
           <div className="pr-spinner" role="status" aria-label="Loading" />
           <div>
@@ -668,6 +740,7 @@ export function mountFloatingUi(): FloatingUiHandle {
         statusKind: 'info',
         pendingResult: null,
         awaitingResponse: false,
+        recovery: 'none',
       }));
     },
     destroy() {

@@ -3,6 +3,7 @@ import { DEFAULT_SETTINGS } from '@/shared/settings';
 import { resetSettings, saveSettings } from '@/shared/storage';
 import { buildRewritePrompt, MODE_INSTRUCTIONS } from '@/shared/promptBuilder';
 import { parseDisabledSites, validateAiChatUrl } from '@/shared/validation';
+import { sendMessage } from '@/shared/messages';
 import type {
   ButtonPositionPreference,
   ExtensionSettings,
@@ -29,6 +30,7 @@ export function OptionsApp(): JSX.Element {
   const [draft, setDraft] = useState<ExtensionSettings>(stored);
   const [status, setStatus] = useState<string>('');
   const [statusKind, setStatusKind] = useState<'info' | 'error'>('info');
+  const [opening, setOpening] = useState(false);
 
   // Sync local draft when storage finishes loading or remotely changes.
   useEffect(() => {
@@ -81,6 +83,30 @@ export function OptionsApp(): JSX.Element {
       showStatus('Reset to defaults.');
     } catch (err) {
       showStatus(`Failed to reset: ${(err as Error).message}`, 'error');
+    }
+  }
+
+  // Validate, save, then open/focus the AI chat in one step using the existing
+  // background tab-reuse logic (focuses a matching tab or opens one new tab).
+  async function handleSaveAndOpen(): Promise<void> {
+    const trimmed = draft.aiChatUrl.trim();
+    if (!trimmed || !urlValidation.ok) {
+      showStatus(urlValidation.message || 'Enter an AI chat URL first.', 'error');
+      return;
+    }
+    setOpening(true);
+    try {
+      await saveSettings(draft);
+      const res = await sendMessage({ type: 'OPEN_OR_FOCUS_AI_TAB' });
+      if (res.ok) {
+        showStatus('AI chat opened.');
+      } else {
+        showStatus('Could not open AI chat. Check the URL and try again.', 'error');
+      }
+    } catch {
+      showStatus('Could not open AI chat. Check the URL and try again.', 'error');
+    } finally {
+      setOpening(false);
     }
   }
 
@@ -167,6 +193,21 @@ export function OptionsApp(): JSX.Element {
             paste, scrape, or read anything from the AI site.
           </span>
         </label>
+
+        <div className="pr-actions">
+          <button
+            type="button"
+            className="pr-btn"
+            onClick={handleSaveAndOpen}
+            disabled={opening}
+          >
+            {opening ? 'Opening…' : 'Save and open AI chat'}
+          </button>
+          <span className="pr-help">
+            Saves your settings first, then opens or focuses the AI chat tab
+            (reusing an existing matching tab when possible).
+          </span>
+        </div>
 
         <label className="pr-field pr-field--row">
           <input

@@ -9,7 +9,7 @@ describe('settings defaults', () => {
     expect(DEFAULT_SETTINGS.aiChatUrl).toBe('');
     expect(DEFAULT_SETTINGS.enableOnAllSites).toBe(true);
     expect(DEFAULT_SETTINGS.disabledSites).toEqual([]);
-    expect(DEFAULT_SETTINGS.aboutMe).toMatch(/Alexis/);
+    expect(DEFAULT_SETTINGS.aboutMe).toMatch(/English is not my first language/);
     expect(DEFAULT_SETTINGS.globalPrompt).toMatch(/Preserve my original meaning/);
     expect(DEFAULT_SETTINGS.avoidPrompt).toMatch(/Avoid robotic language/);
   });
