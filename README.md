@@ -6,11 +6,14 @@
 
 **Rewrite text right where you type it - choose a tone, review the suggestion, apply it only if you like it.**
 
+[![CI](https://github.com/atj393/re-phraser/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/atj393/re-phraser/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-4285F4)](src/manifest.ts)
 [![Version](https://img.shields.io/badge/version-1.1.0-informational)](CHANGELOG.md)
 
-Chrome Web Store: **Coming soon** &nbsp;·&nbsp; Microsoft Edge Add-ons: **Coming soon**
+[![Available in the Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?logo=googlechrome&logoColor=white&style=for-the-badge)](https://chromewebstore.google.com/detail/re-phraser-ai-text-rewrit/ldocllepggdbadbedboopoeebadnpddi)
+
+Chrome Web Store: **live** &nbsp;·&nbsp; Microsoft Edge Add-ons: **not submitted** (the same MV3 package builds via `npm run package:edge`)
 
 </div>
 
@@ -34,6 +37,8 @@ There is no API key, no separate account, and no Re-Phraser server.
 - [Permissions](#permissions)
 - [Where it works](#where-it-works)
 - [Troubleshooting](#troubleshooting)
+- [Architecture](#architecture)
+- [Testing](#testing)
 - [Support](#support)
 - [Commercial use](#commercial-use)
 - [For developers](#for-developers)
@@ -43,7 +48,7 @@ There is no API key, no separate account, and no Re-Phraser server.
 
 ## Quick start
 
-1. **Install** Re-Phraser from the Chrome Web Store or Microsoft Edge Add-ons. *(Store links: Coming soon. Until then, see [For developers](#for-developers) to load it unpacked.)*
+1. **Install** Re-Phraser from the [Chrome Web Store](https://chromewebstore.google.com/detail/re-phraser-ai-text-rewrit/ldocllepggdbadbedboopoeebadnpddi). Edge users can install from the same listing; there is no separate Edge Add-ons listing yet. To run from source instead, see [For developers](#for-developers).
 2. **Open the settings page** (right-click the toolbar icon → options, or use the gear button in the floating toolbar).
 3. **Open your preferred AI chat** (for example ChatGPT, Claude, or Gemini), start a conversation, and send a simple message such as "Hi". Then copy the conversation URL from your browser's address bar.
 4. **Save that URL** in Re-Phraser settings.
@@ -171,6 +176,91 @@ Re-Phraser is released under the [MIT License](LICENSE), which permits personal 
 
 ---
 
+## Architecture
+
+Re-Phraser has **no backend, no API key, and no AI integration of its own**. It
+drives an AI chat tab the user has already opened and signed in to, which is the
+single decision the whole design follows from.
+
+```mermaid
+flowchart LR
+    subgraph PAGE["Page you are typing in"]
+        SEL["Selection watcher"]
+        UI["Floating toolbar<br/>Quick · Normal · Formal"]
+        PANEL["Suggestion panel<br/>Apply / Cancel"]
+    end
+
+    BG["Background service worker<br/>owns tab reuse + orchestration"]
+
+    subgraph CHAT["Your AI chat tab · already signed in"]
+        INJ["chatInjector<br/>types, sends, reads reply"]
+    end
+
+    STORE[("chrome.storage.sync<br/>settings only")]
+
+    SEL -->|"full selection"| UI
+    UI -->|"SEND_PROMPT_TO_AI"| BG
+    BG -->|"INJECT_PROMPT"| INJ
+    INJ -->|"reply text"| BG
+    BG --> PANEL
+    PANEL -->|"Apply"| PAGE
+    UI -.->|"prompt built from settings"| STORE
+
+    classDef ext stroke-dasharray: 5 5
+    class CHAT ext
+```
+
+**Why no backend?** An API key means either the user pastes one (friction, and a
+credential to protect) or the extension ships one (metering, accounts, a
+subscription, and my bill for someone else's usage). Reusing a chat tab the user
+already has open removes all of that: their existing subscription does the work,
+under their own account, with no third party in the middle. The cost is honest
+and stated plainly — the text does go to whichever AI provider they configured,
+through that provider's normal website.
+
+**Why the background worker owns the tab.** Content scripts cannot open or focus
+tabs, and the same content script runs on both the editing page *and* the chat
+tab. The worker is the only place that can find-or-open the configured
+conversation, wait for it to load, message the right tab, and return the reply —
+so tab reuse lives there and nowhere else. Without it, every rewrite would open
+another chat tab.
+
+**Permissions, and why each is needed:** `storage` (settings), `tabs` (find and
+reuse the configured chat tab), `clipboardWrite` (fallback when the reply cannot
+be inserted), and an `<all_urls>` content script (the toolbar must appear in any
+editable field). There are **no** `host_permissions`, no `activeTab`, no
+`clipboardRead`, and no `scripting`.
+
+**What is never stored:** selected text, prompts, and AI replies are held only in
+memory for the duration of a request. Only settings are persisted.
+
+## Testing
+
+**126 unit tests across 8 files**, all passing, run on every push and pull
+request by [CI](https://github.com/atj393/re-phraser/actions/workflows/ci.yml)
+together with typecheck, lint, and build.
+
+| Suite | Tests | What it pins down |
+|---|---|---|
+| `editable` | 39 | Detecting editable elements across inputs, textareas, and contenteditable |
+| `promptBuilder` | 29 | Prompt assembly from settings, per-mode differences, personalization |
+| `popupHostname` | 18 | Per-site enable/disable matching rules |
+| `replace` | 13 | Safe text replacement, including cursor handling |
+| `selection` | 10 | Detecting a *full* selection, which is what shows the toolbar |
+| `validation` | 7 | AI chat URL validation — http/https only |
+| `siteCheck` | 6 | Global and per-site toggles |
+| `settings` | 4 | Defaults and storage round-trip |
+
+Shared logic in `src/shared/` is framework-free precisely so it can be tested
+directly. Not covered: live rewrites against a real ChatGPT/Claude/Gemini tab —
+those depend on third-party DOM that changes without notice, and are checked by
+hand before a release.
+
+```bash
+npm run test           # vitest
+npm run release:check  # typecheck -> test -> lint -> build (what CI runs)
+```
+
 ## For developers
 
 Re-Phraser is a Manifest V3 extension built with TypeScript, React, and Vite.
@@ -188,8 +278,8 @@ Load the unpacked extension by pointing your browser's extensions page (in devel
 Package store-ready ZIPs:
 
 ```bash
-npm run package:chrome   # -> releases/re-phraser-v1.0.1-chrome.zip
-npm run package:edge     # -> releases/re-phraser-v1.0.1-edge.zip
+npm run package:chrome   # -> releases/re-phraser-v<version>-chrome.zip
+npm run package:edge     # -> releases/re-phraser-v<version>-edge.zip
 ```
 
 More detail for contributors and future maintainers is in [CLAUDE.md](CLAUDE.md).
