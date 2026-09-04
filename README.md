@@ -16,9 +16,7 @@
 
 Chrome Web Store: **live** &nbsp;·&nbsp; Microsoft Edge Add-ons: **not submitted** (the same MV3 package builds via `npm run package:edge`)
 
-[<img src="docs/assets/brag.jpg" width="720" alt="Re-Phraser launch video" />](docs/assets/brag.mp4)
-
-▶ Watch the launch video
+https://github.com/user-attachments/assets/2de38951-1d04-43d4-a1a4-1abb6e1c3b37
 
 </div>
 
